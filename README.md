@@ -1,4 +1,4 @@
-# clear-page
+# delete page Dom
 
 ## Project setup
 ```
@@ -25,5 +25,10 @@ npm run test
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+# 说明
+确保页面局部区域的dom被删除&重新载入页面时自动删除。
+
+# 使用
+1. chrome设置-》更多工具-》扩展程序-》加载已解压的扩展程序-》选择本项目的output文件夹-》确定。
+2. 打开目标页面，点击浏览器右上方icon区域，调出插件，f12审查元素，找到要删除元素的css选择器，填入输入框，确认。
+
