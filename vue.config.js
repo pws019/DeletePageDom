@@ -3,7 +3,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin') // 这里引入`这个C
 
 module.exports = {
   lintOnSave: false,
-  outputDir: 'AdSafe',
+  outputDir: './output',
   configureWebpack: {
     plugins: [
       new CopyWebpackPlugin([
