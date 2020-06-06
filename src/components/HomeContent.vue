@@ -1,10 +1,10 @@
 <template>
   <div>
     <div>
-      <Input type="textarea" :rows="4" :disabled="true" v-model="cacheSelector" placeholder="已缓存选择器" style="width: 300px;" />
+      <Input type="textarea" :rows="4" :disabled="true" v-model="cacheSelector" placeholder="已缓存css选择器" style="width: 300px;" />
     </div>
     <div>
-      <Input type="textarea" :rows="4" v-model="filterSelector" placeholder="需要删除元素的选择器,多个请“,”隔开"  style="width: 300px" class="mgt10"/>
+      <Input type="textarea" :rows="4" v-model="filterSelector" placeholder="需要删除元素的css选择器,多个请“,”隔开"  style="width: 300px" class="mgt10"/>
     </div>
     <div class="mgt10">
       <Button type="primary" @click="confirm" style="width: 140px">生效</Button>
