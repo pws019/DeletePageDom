@@ -1,7 +1,10 @@
 <template>
   <div>
     <div>
-      <Input v-model="filterSelector"  style="width: 300px" />
+      <Input type="textarea" :rows="4" :disabled="true" v-model="cacheSelector" placeholder="已缓存选择器" style="width: 300px;" />
+    </div>
+    <div>
+      <Input type="textarea" :rows="4" v-model="filterSelector" placeholder="需要缓存的选择器"  style="width: 300px" class="mgt10"/>
     </div>
     <div class="mgt10">
       <Button type="primary" @click="confirm" style="width: 140px">生效</Button>
@@ -21,23 +24,18 @@ import Msg from '@/util/msg.js'
 export default Vue.extend({
   name: 'HomeContent',
   mounted() {
-    const selectors = (localStorage.getItem("clearPageSelectors")||'').split('+++');
-    // const errs = this.deleteDoms(selectors);
-    // if(errs.length > 0) {
-    //   this.errMsg = errs.join('**************************')
-    // }
-    // this.deleteDoms(selectors);
-    this.sendDeleteDomMsg(selectors, (resp) => {
-      if(resp.err) {
-        this.errMsg = resp.err;
-        return;
-      }
-    });
+    Msg.sendMessage({type:'getDeleteSelectorsFromLocalStorage'}, (resp) => {
+      const sels = resp.data || [];
+      const cur = sels.toString();
+      this.filterSelector = cur;
+      this.cacheSelector = cur;
+    })
   },
   data() {
     return {
       filterSelector: '',
       errMsg:'',
+      cacheSelector:'',
     }
   },
   methods:{
@@ -45,46 +43,27 @@ export default Vue.extend({
       if(!this.filterSelector) {
         return;
       }
-      const selectors = this.filterSelector.replace(/，/g,',').split(',');
+      const selectors = this.filterSelector.replace(/\n/g,',').replace(/，/g,',').split(',');
       // const errs = this.deleteDoms(selectors);
 
-      this.sendDeleteDomMsg(selectors, (resp) => {
+      Msg.sendMessage({type: 'deleteDom', data: selectors}, (resp) => {
         const errs = resp.err;
         if(errs.length > 0) {
           this.errMsg = errs.join('**************************')
         } else {
-          localStorage.setItem("clearPageSelectors", selectors.join('+++'));
+          this.errMsg = '';
         }
-      });
-
-      
-      console.log(selectors);
+        Msg.sendMessage({type: 'setDeleteSelectorsFromLocalStorage', data: selectors});
+        this.filterSelector = selectors.toString();
+        this.cacheSelector = selectors.toString();
+      })
       return undefined;
     },
     reset(){
-      return undefined;
+      Msg.sendMessage({type:'setDeleteSelectorsFromLocalStorage', data: ''});
+      this.filterSelector = '';
+      this.cacheSelector = '';
     },
-    sendDeleteDomMsg(selectors, cb) {
-      Msg.sendMessage({type: 'deleteDom', data: selectors}, (resp) => {
-        cb && cb(resp);
-      });
-    },
-    // deleteDoms(selectors) {
-    //   let errs = [];
-    //   selectors.forEach(selector => {
-    //     if(!selector) {
-    //       return;
-    //     }
-    //     try{
-    //       document.querySelector(selector).forEach((ele) => {
-    //         ele.parentNode.removeChild(ele); // 删除自己
-    //       })
-    //     } catch(err) {
-    //       errs.push(err);
-    //     }
-    //   });
-    //   return errs;
-    // }
   }
 });
 </script>
